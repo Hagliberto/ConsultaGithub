@@ -89,26 +89,32 @@ def main():
     """
     Função principal que define a interface do Streamlit e controla o fluxo do programa.
     """
-    #st.title('Perfil encontrado')
+    st.title('Consultar perfis no Github')
 
     # Barra lateral para pesquisa
-    st.sidebar.title('Consultar perfis no Github')
-    username = st.sidebar.text_input('Nome de usuário do GitHub')
+    st.sidebar.title('Opções de Pesquisa')
 
-    if st.sidebar.button('Buscar Perfil'):
-        response = selecionarUsuario(username)
-        if response.status_code == 200:
-            infoUsuario = response.json()
+    # Campo de pesquisa para até 3 perfis
+    usernames = []
+    for i in range(3):
+        usernames.append(st.sidebar.text_input(f'Nome de usuário {i+1} do GitHub'))
 
-            # Espaçamento após o botão para separar o perfil exibido
-            st.write("")
+    if st.sidebar.button('Buscar Perfis'):
+        for username in usernames:
+            if username:
+                response = selecionarUsuario(username)
+                if response.status_code == 200:
+                    infoUsuario = response.json()
 
-            # Estilo para destacar as informações do perfil
-            exibir_perfil(infoUsuario)
-        elif response.status_code == 404:
-            st.error('Usuário não encontrado. Verifique o nome de usuário.')
-        else:
-            st.error('Ocorreu um erro ao buscar o perfil do usuário. Tente novamente mais tarde.')
+                    # Espaçamento após o perfil para separar os perfis exibidos
+                    st.write("")
+
+                    # Estilo para destacar as informações do perfil
+                    exibir_perfil(infoUsuario)
+                elif response.status_code == 404:
+                    st.error(f'Usuário "{username}" não encontrado. Verifique o nome de usuário.')
+                else:
+                    st.error(f'Ocorreu um erro ao buscar o perfil do usuário "{username}". Tente novamente mais tarde.')
 
 
 if __name__ == '__main__':
