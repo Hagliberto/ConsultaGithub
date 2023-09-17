@@ -1,14 +1,48 @@
+import json
 import requests
 import streamlit as st
+from streamlit_lottie import st_lottie
+import os
 
 BASE_URL = 'https://api.github.com'
 
+
+def load_lottiefile(filepath: str):
+    """
+    Carrega um arquivo Lottie JSON.
+
+    Args:
+        filepath (str): O caminho para o arquivo JSON.
+
+    Returns:
+        dict: O conteúdo do arquivo JSON carregado em forma de dicionário.
+    """
+    with open(filepath, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
 def selecionarUsuario(username):
+    """
+    Seleciona um usuário do GitHub com base no nome de usuário.
+
+    Args:
+        username (str): O nome de usuário do GitHub.
+
+    Returns:
+        requests.Response: A resposta da API contendo as informações do usuário.
+    """
     url = f'{BASE_URL}/users/{username}'
     response = requests.get(url)
     return response
 
+
 def exibir_perfil(infoUsuario):
+    """
+    Exibe as informações do perfil de um usuário do GitHub.
+
+    Args:
+        infoUsuario (dict): As informações do usuário obtidas da API do GitHub.
+    """
     st.markdown(f'''
         <div style="
             border: 2px solid #ccc;
@@ -50,26 +84,22 @@ def exibir_perfil(infoUsuario):
         </div>
     ''', unsafe_allow_html=True)
 
-def ui():
-    st.title('Consultar perfis no Github 🤓')
 
-    # Espaçamento para separar o título da seção de entrada do usuário
-    st.write("")
+def main():
+    """
+    Função principal que define a interface do Streamlit e controla o fluxo do programa.
+    """
+    #st.title('Perfil encontrado')
 
-    # Organização visual usando uma coluna
-    col1, col2 = st.columns([1, 2])
+    # Barra lateral para pesquisa
+    st.sidebar.title('Consultar perfis no Github')
+    username = st.sidebar.text_input('Nome de usuário do GitHub')
 
-    with col1:
-        username = st.text_input('Insira o username de usuário do Github')
-
-    with col2:
-        st.image("https://platzi.com.br/blog/wp-content/uploads/2022/04/cover-github-105d8310-41f9-4d9e-91e0-4cbde3d8c645-50decd84-0c17-476c-b8dc-61091d0dd27f-3.webp", width=100)
-    
-    if st.button('Buscar Perfil'):
+    if st.sidebar.button('Buscar Perfil'):
         response = selecionarUsuario(username)
         if response.status_code == 200:
             infoUsuario = response.json()
-            
+
             # Espaçamento após o botão para separar o perfil exibido
             st.write("")
 
@@ -80,4 +110,6 @@ def ui():
         else:
             st.error('Ocorreu um erro ao buscar o perfil do usuário. Tente novamente mais tarde.')
 
-ui()
+
+if __name__ == '__main__':
+    main()
