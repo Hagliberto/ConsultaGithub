@@ -10,22 +10,48 @@ def selecionarUsuario(username):
 
 def exibir_perfil(infoUsuario):
     st.markdown(f'''
-        <div class="card" style="width: 18rem;">
-            <img src="{infoUsuario['avatar_url']}" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">{infoUsuario['login']}</h5>
-                <p class="card-text">{infoUsuario['bio']}</p>
-                <p class="card-text">Seguidores: {infoUsuario['followers']}</p>
-                <p class="card-text">Repositórios públicos: {infoUsuario['public_repos']}</p>
-                <a href="{infoUsuario['html_url']} " style="color: white; text-decoration: none;" class="btn btn-primary">Ver Perfil</a>
-            </div>
+        <div style="
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            max-width: 300px;
+            text-align: center;
+            background-color: #f9f9f9;
+        ">
+            <img src="{infoUsuario['avatar_url']}" alt="Avatar" style="
+                max-width: 100%;
+                border-radius: 50%;
+            ">
+            <h5 style="
+                font-size: 1.5em;
+                color: #333; /* Cor do texto */
+            ">{infoUsuario['login']}</h5>
+            <p style="
+                font-size: 1.2em;
+                color: #333; /* Cor do texto */
+            ">{infoUsuario['bio']}</p>
+            <p style="
+                font-size: 1.2em;
+                color: #333; /* Cor do texto */
+            ">Seguidores: {infoUsuario['followers']}</p>
+            <p style="
+                font-size: 1.2em;
+                color: #333; /* Cor do texto */
+            ">Repositórios públicos: {infoUsuario['public_repos']}</p>
+            <a href="{infoUsuario['html_url']}" style="
+                text-decoration: none;
+                background-color: #007BFF;
+                color: white;
+                padding: 10px 20px;
+                border-radius: 5px;
+                font-size: 1.2em;
+                transition: background-color 0.3s;
+            ">Ver Perfil</a>
         </div>
     ''', unsafe_allow_html=True)
 
 def ui():
-    st.markdown('<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">', unsafe_allow_html=True)
-    
-    st.title('Consultar perfis no Github')
+    st.title('Consultar perfis no Github 🤓')
 
     # Espaçamento para separar o título da seção de entrada do usuário
     st.write("")
@@ -48,7 +74,6 @@ def ui():
             st.write("")
 
             # Estilo para destacar as informações do perfil
-            st.markdown('<h2>Perfil do Usuário</h2>', unsafe_allow_html=True)
             exibir_perfil(infoUsuario)
         elif response.status_code == 404:
             st.error('Usuário não encontrado. Verifique o nome de usuário.')
